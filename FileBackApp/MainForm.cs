@@ -49,7 +49,6 @@ namespace FileBackApp
                 timer.Interval = (int)nud_Time.Value * (cb_Units.SelectedIndex == 0 ? 1000 : cb_Units.SelectedIndex == 1 ? 60000 : 3600000);
                 timer.Start();
                 btn_Start.Text = "Stop loop";
-                Text = cb_Units.Text;
             }
             else
             {

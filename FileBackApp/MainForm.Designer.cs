@@ -56,11 +56,11 @@
             // tlp_UI
             // 
             this.tlp_UI.ColumnCount = 5;
-            this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 7F));
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 18.74047F));
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.51926F));
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10.74027F));
-            this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 15F));
             this.tlp_UI.Controls.Add(this.nud_Frequency, 2, 5);
             this.tlp_UI.Controls.Add(this.lbl_Frequency, 1, 5);
             this.tlp_UI.Controls.Add(this.tb_From, 2, 1);
@@ -78,9 +78,10 @@
             this.tlp_UI.Controls.Add(this.lbl_Units, 1, 3);
             this.tlp_UI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_UI.Location = new System.Drawing.Point(0, 0);
+            this.tlp_UI.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tlp_UI.Name = "tlp_UI";
             this.tlp_UI.RowCount = 9;
-            this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 6F));
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28531F));
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28531F));
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28531F));
@@ -88,16 +89,17 @@
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28531F));
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28531F));
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.28816F));
-            this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.tlp_UI.Size = new System.Drawing.Size(518, 218);
+            this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 6F));
+            this.tlp_UI.Size = new System.Drawing.Size(691, 268);
             this.tlp_UI.TabIndex = 0;
             // 
             // nud_Frequency
             // 
             this.nud_Frequency.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nud_Frequency.Location = new System.Drawing.Point(102, 124);
+            this.nud_Frequency.Location = new System.Drawing.Point(136, 154);
+            this.nud_Frequency.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.nud_Frequency.Name = "nud_Frequency";
-            this.nud_Frequency.Size = new System.Drawing.Size(348, 20);
+            this.nud_Frequency.Size = new System.Drawing.Size(463, 22);
             this.nud_Frequency.TabIndex = 11;
             this.nud_Frequency.ValueChanged += new System.EventHandler(this.value_Changed);
             // 
@@ -107,9 +109,10 @@
             this.lbl_Frequency.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_Frequency.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.lbl_Frequency.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbl_Frequency.Location = new System.Drawing.Point(8, 121);
+            this.lbl_Frequency.Location = new System.Drawing.Point(11, 150);
+            this.lbl_Frequency.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Frequency.Name = "lbl_Frequency";
-            this.lbl_Frequency.Size = new System.Drawing.Size(88, 29);
+            this.lbl_Frequency.Size = new System.Drawing.Size(117, 36);
             this.lbl_Frequency.TabIndex = 10;
             this.lbl_Frequency.Text = "Frequency";
             this.lbl_Frequency.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -117,9 +120,10 @@
             // tb_From
             // 
             this.tb_From.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tb_From.Location = new System.Drawing.Point(102, 8);
+            this.tb_From.Location = new System.Drawing.Point(136, 10);
+            this.tb_From.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tb_From.Name = "tb_From";
-            this.tb_From.Size = new System.Drawing.Size(348, 20);
+            this.tb_From.Size = new System.Drawing.Size(463, 22);
             this.tb_From.TabIndex = 4;
             this.tb_From.WordWrap = false;
             this.tb_From.TextChanged += new System.EventHandler(this.value_Changed);
@@ -127,9 +131,10 @@
             // tb_To
             // 
             this.tb_To.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tb_To.Location = new System.Drawing.Point(102, 37);
+            this.tb_To.Location = new System.Drawing.Point(136, 46);
+            this.tb_To.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tb_To.Name = "tb_To";
-            this.tb_To.Size = new System.Drawing.Size(348, 20);
+            this.tb_To.Size = new System.Drawing.Size(463, 22);
             this.tb_To.TabIndex = 5;
             this.tb_To.WordWrap = false;
             this.tb_To.TextChanged += new System.EventHandler(this.value_Changed);
@@ -137,9 +142,10 @@
             // nud_Time
             // 
             this.nud_Time.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.nud_Time.Location = new System.Drawing.Point(102, 95);
+            this.nud_Time.Location = new System.Drawing.Point(136, 118);
+            this.nud_Time.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.nud_Time.Name = "nud_Time";
-            this.nud_Time.Size = new System.Drawing.Size(348, 20);
+            this.nud_Time.Size = new System.Drawing.Size(463, 22);
             this.nud_Time.TabIndex = 2;
             this.nud_Time.ValueChanged += new System.EventHandler(this.value_Changed);
             // 
@@ -147,9 +153,10 @@
             // 
             this.btn_SearchFrom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btn_SearchFrom.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_SearchFrom.Location = new System.Drawing.Point(456, 8);
+            this.btn_SearchFrom.Location = new System.Drawing.Point(607, 10);
+            this.btn_SearchFrom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_SearchFrom.Name = "btn_SearchFrom";
-            this.btn_SearchFrom.Size = new System.Drawing.Size(48, 23);
+            this.btn_SearchFrom.Size = new System.Drawing.Size(63, 28);
             this.btn_SearchFrom.TabIndex = 0;
             this.btn_SearchFrom.Text = "···";
             this.btn_SearchFrom.UseVisualStyleBackColor = true;
@@ -159,9 +166,10 @@
             // 
             this.btn_SearchTo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btn_SearchTo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_SearchTo.Location = new System.Drawing.Point(456, 37);
+            this.btn_SearchTo.Location = new System.Drawing.Point(607, 46);
+            this.btn_SearchTo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_SearchTo.Name = "btn_SearchTo";
-            this.btn_SearchTo.Size = new System.Drawing.Size(48, 23);
+            this.btn_SearchTo.Size = new System.Drawing.Size(63, 28);
             this.btn_SearchTo.TabIndex = 1;
             this.btn_SearchTo.Text = "···";
             this.btn_SearchTo.UseVisualStyleBackColor = true;
@@ -173,9 +181,10 @@
             this.btn_Start.Enabled = false;
             this.btn_Start.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btn_Start.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Start.Location = new System.Drawing.Point(8, 182);
+            this.btn_Start.Location = new System.Drawing.Point(11, 226);
+            this.btn_Start.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btn_Start.Name = "btn_Start";
-            this.btn_Start.Size = new System.Drawing.Size(88, 23);
+            this.btn_Start.Size = new System.Drawing.Size(117, 28);
             this.btn_Start.TabIndex = 6;
             this.btn_Start.Text = "Start loop";
             this.btn_Start.UseVisualStyleBackColor = true;
@@ -187,9 +196,10 @@
             this.lbl_Time.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_Time.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.lbl_Time.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbl_Time.Location = new System.Drawing.Point(8, 92);
+            this.lbl_Time.Location = new System.Drawing.Point(11, 114);
+            this.lbl_Time.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Time.Name = "lbl_Time";
-            this.lbl_Time.Size = new System.Drawing.Size(88, 29);
+            this.lbl_Time.Size = new System.Drawing.Size(117, 36);
             this.lbl_Time.TabIndex = 3;
             this.lbl_Time.Text = "Time";
             this.lbl_Time.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -200,9 +210,10 @@
             this.lbl_To.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_To.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.lbl_To.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbl_To.Location = new System.Drawing.Point(8, 34);
+            this.lbl_To.Location = new System.Drawing.Point(11, 42);
+            this.lbl_To.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_To.Name = "lbl_To";
-            this.lbl_To.Size = new System.Drawing.Size(88, 29);
+            this.lbl_To.Size = new System.Drawing.Size(117, 36);
             this.lbl_To.TabIndex = 8;
             this.lbl_To.Text = "Copy to:";
             this.lbl_To.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -213,9 +224,10 @@
             this.lbl_From.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lbl_From.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.lbl_From.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lbl_From.Location = new System.Drawing.Point(8, 5);
+            this.lbl_From.Location = new System.Drawing.Point(11, 6);
+            this.lbl_From.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_From.Name = "lbl_From";
-            this.lbl_From.Size = new System.Drawing.Size(88, 29);
+            this.lbl_From.Size = new System.Drawing.Size(117, 36);
             this.lbl_From.TabIndex = 7;
             this.lbl_From.Text = "Directory";
             this.lbl_From.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -224,9 +236,10 @@
             // 
             this.tlp_UI.SetColumnSpan(this.pb_CopyTime, 2);
             this.pb_CopyTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pb_CopyTime.Location = new System.Drawing.Point(102, 182);
+            this.pb_CopyTime.Location = new System.Drawing.Point(136, 226);
+            this.pb_CopyTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pb_CopyTime.Name = "pb_CopyTime";
-            this.pb_CopyTime.Size = new System.Drawing.Size(402, 23);
+            this.pb_CopyTime.Size = new System.Drawing.Size(534, 28);
             this.pb_CopyTime.Step = 1;
             this.pb_CopyTime.TabIndex = 9;
             // 
@@ -234,9 +247,10 @@
             // 
             this.cb_Always.AutoSize = true;
             this.cb_Always.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cb_Always.Location = new System.Drawing.Point(8, 153);
+            this.cb_Always.Location = new System.Drawing.Point(11, 190);
+            this.cb_Always.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cb_Always.Name = "cb_Always";
-            this.cb_Always.Size = new System.Drawing.Size(88, 23);
+            this.cb_Always.Size = new System.Drawing.Size(117, 28);
             this.cb_Always.TabIndex = 12;
             this.cb_Always.Text = "Do always";
             this.cb_Always.UseVisualStyleBackColor = true;
@@ -250,9 +264,10 @@
             "Seconds",
             "Minutes",
             "Hours"});
-            this.cb_Units.Location = new System.Drawing.Point(102, 66);
+            this.cb_Units.Location = new System.Drawing.Point(136, 82);
+            this.cb_Units.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cb_Units.Name = "cb_Units";
-            this.cb_Units.Size = new System.Drawing.Size(348, 21);
+            this.cb_Units.Size = new System.Drawing.Size(463, 24);
             this.cb_Units.TabIndex = 13;
             this.cb_Units.Tag = "";
             this.cb_Units.TextChanged += new System.EventHandler(this.value_Changed);
@@ -261,9 +276,10 @@
             // 
             this.lbl_Units.AutoSize = true;
             this.lbl_Units.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbl_Units.Location = new System.Drawing.Point(8, 63);
+            this.lbl_Units.Location = new System.Drawing.Point(11, 78);
+            this.lbl_Units.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbl_Units.Name = "lbl_Units";
-            this.lbl_Units.Size = new System.Drawing.Size(88, 29);
+            this.lbl_Units.Size = new System.Drawing.Size(117, 36);
             this.lbl_Units.TabIndex = 14;
             this.lbl_Units.Text = "Units";
             this.lbl_Units.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -274,12 +290,13 @@
             // 
             // mainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 218);
+            this.ClientSize = new System.Drawing.Size(691, 268);
             this.Controls.Add(this.tlp_UI);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "mainForm";
             this.Text = "Backapp";
             this.tlp_UI.ResumeLayout(false);
