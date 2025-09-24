@@ -126,7 +126,6 @@ namespace FileBackApp
             int percent = (int)(((double)tickInterval / t_File.Interval) * 100);
             percent = Math.Max(0, Math.Min(100, percent));
             pb_CopyTime.Value = percent;
-            Text = $"{(int)(tickInterval * pb_CopyTime.Maximum / t_File.Interval)} AND {pb_CopyTime.Value} AND {tickInterval} AND {t_File.Interval} AND {t_File.Interval}";
             if (pb_CopyTime.Value >= pb_CopyTime.Maximum)
             {
                 tickInterval = 0;
