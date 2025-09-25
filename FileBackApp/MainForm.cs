@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,7 +16,7 @@ namespace FileBackApp
 {
     public partial class mainForm : Form
     {
-        int tickInterval = 0;
+        int tickInterval;
         int timeInterval;
         string unit;
         string lastItemSelected;
@@ -23,6 +25,8 @@ namespace FileBackApp
         {
             InitializeComponent();
             cb_Units.SelectedIndex = 0;
+            rtb_Logs.AppendText($"Backapp launched at {DateTime.UtcNow}\nFound a bug? Write here: " +
+                $"https://github.com/CatNuton/Backapp/issues");
         }
 
         private void btn_SearchFrom_Click(object sender, EventArgs e)
@@ -44,7 +48,8 @@ namespace FileBackApp
         {
             if (!FileSystem.DirectoryExists(tb_From.Text))
             {
-                MessageBox.Show("The source directory does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("The source directory does not exist or incorrect.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             else if (!Path.IsPathRooted(tb_To.Text))
@@ -60,17 +65,23 @@ namespace FileBackApp
                 unit = cb_Units.Text;
                 t_File.Start();
                 t_Progress.Start();
+                UpdateProgressBar();
                 btn_Start.Text = "Stop loop";
             }
             else
             {
-                t_File.Stop();
-                t_Progress.Stop();
-                tickInterval = 0;
-                timeInterval = 0;
-                pb_CopyTime.Value = 0;
-                btn_Start.Text = "Start loop";
+                Stop();
             }
+        }
+
+        private void Stop()
+        {
+            t_File.Stop();
+            t_Progress.Stop();
+            tickInterval = 0;
+            pb_CopyTime.Value = 0;
+            timeInterval = 0;
+            btn_Start.Text = "Start loop";
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -84,7 +95,7 @@ namespace FileBackApp
                     path = $"{tb_To.Text}\\{directoryInfo.Name}-" +
                                 $"{DateTime.Now.ToString().Replace(":", ".")}";
                     FileSystem.CreateDirectory($"{tb_To.Text}\\{directoryInfo.Name}-" +
-                        $"{DateTime.Now.ToString().Replace(":", ".")}"); 
+                        $"{DateTime.Now.ToString().Replace(":", ".")}");
                 }
                 else
                 {
@@ -99,20 +110,23 @@ namespace FileBackApp
                 rtb_Logs.AppendText($"\nCopied {tb_From.Text} to {path} at {DateTime.Now.TimeOfDay}");
                 rtb_Logs.SelectionColor = rtb_Logs.ForeColor;
                 rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
+                tickInterval = 0;
+                pb_CopyTime.Value = 0;
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                Stop();
                 rtb_Logs.SelectionStart = rtb_Logs.TextLength;
                 rtb_Logs.SelectionLength = 0;
                 rtb_Logs.SelectionColor = Color.Red;
-                rtb_Logs.AppendText($"\n{exception}");
+                rtb_Logs.AppendText($"\n{ex}");
                 rtb_Logs.SelectionColor = rtb_Logs.ForeColor;
             }
         }
 
         private void value_Changed(object sender, EventArgs e)
         {
-            btn_Start.Enabled = !string.IsNullOrWhiteSpace(tb_From.Text) && !string.IsNullOrWhiteSpace(tb_To.Text) 
+            btn_Start.Enabled = !string.IsNullOrWhiteSpace(tb_From.Text) && !string.IsNullOrWhiteSpace(tb_To.Text)
                 && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text);
             if (!cb_Units.Items.Contains(cb_Units.Text))
             {
@@ -122,20 +136,35 @@ namespace FileBackApp
 
         private void t_Progress_Tick(object sender, EventArgs e)
         {
+            UpdateProgressBar();
+            Text = $"tickInterval {tickInterval}, pb_CopyTime {pb_CopyTime.Value}";
+        }
+
+        private void UpdateProgressBar()
+        {
             tickInterval += t_Progress.Interval;
-            int percent = (int)(((double)tickInterval / t_File.Interval) * 100);
+            int percent = (int)(((double)tickInterval / t_File.Interval) * pb_CopyTime.Maximum);
             percent = Math.Max(0, Math.Min(100, percent));
             pb_CopyTime.Value = percent;
-            if (pb_CopyTime.Value >= pb_CopyTime.Maximum)
-            {
-                tickInterval = 0;
-                pb_CopyTime.Value = 0;
-            }
         }
 
         private void cb_Units_SelectedIndexChanged(object sender, EventArgs e)
         {
             lastItemSelected = cb_Units.Text;
+        }
+
+        private void rtb_Logs_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.LinkText) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening website: {ex}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
+            }
         }
     }
 }
