@@ -24,7 +24,7 @@ namespace FileBackApp
         public mainForm()
         {
             InitializeComponent();
-            cb_Units.SelectedIndex = 0;
+            cb_Units.SelectedIndex = 1;
             rtb_Logs.AppendText($"Backapp launched at {DateTime.UtcNow}\nFound a bug? Write here: " +
                 $"https://github.com/CatNuton/Backapp/issues");
         }
@@ -36,7 +36,7 @@ namespace FileBackApp
 
         private string Search()
         {
-            return folderBrowserDialog.ShowDialog() == DialogResult.OK ? folderBrowserDialog.SelectedPath : null;
+            return folderBrowserDialog.ShowDialog() == DialogResult.OK ? folderBrowserDialog.SelectedPath : tb_From.Text;
         }
 
         private void btn_SearchTo_Click(object sender, EventArgs e)
@@ -71,6 +71,7 @@ namespace FileBackApp
             else
             {
                 Stop();
+                CheckToStart();
             }
         }
 
@@ -104,11 +105,7 @@ namespace FileBackApp
                         FileSystem.CreateDirectory(path);
                 }
                 FileSystem.CopyDirectory(tb_From.Text, path, true);
-                rtb_Logs.SelectionStart = rtb_Logs.TextLength;
-                rtb_Logs.SelectionLength = 0;
-                rtb_Logs.SelectionColor = Color.Green;
-                rtb_Logs.AppendText($"\nCopied {tb_From.Text} to {path} at {DateTime.Now.TimeOfDay}");
-                rtb_Logs.SelectionColor = rtb_Logs.ForeColor;
+                ColorText($"\nCopied {tb_From.Text} to {path} at {DateTime.Now.TimeOfDay}", Color.Green);
                 rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
                 tickInterval = 0;
                 pb_CopyTime.Value = 0;
@@ -116,18 +113,28 @@ namespace FileBackApp
             catch (Exception ex)
             {
                 Stop();
-                rtb_Logs.SelectionStart = rtb_Logs.TextLength;
-                rtb_Logs.SelectionLength = 0;
-                rtb_Logs.SelectionColor = Color.Red;
-                rtb_Logs.AppendText($"\n{ex}");
-                rtb_Logs.SelectionColor = rtb_Logs.ForeColor;
+                ColorText(ex.Message, Color.Red);
             }
+        }
+
+        private void ColorText(string text, Color color)
+        {
+            rtb_Logs.SelectionStart = rtb_Logs.TextLength;
+            rtb_Logs.SelectionLength = 0;
+            rtb_Logs.SelectionColor = color;
+            rtb_Logs.AppendText($"\n{text}");
+            rtb_Logs.SelectionColor = rtb_Logs.ForeColor;
         }
 
         private void value_Changed(object sender, EventArgs e)
         {
-            btn_Start.Enabled = !string.IsNullOrWhiteSpace(tb_From.Text) && !string.IsNullOrWhiteSpace(tb_To.Text)
-                && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text);
+            CheckToStart();
+        }
+
+        private void CheckToStart()
+        {
+            btn_Start.Enabled = (!string.IsNullOrWhiteSpace(tb_From.Text) && !string.IsNullOrWhiteSpace(tb_To.Text)
+                            && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text) || t_File.Enabled);
             if (!cb_Units.Items.Contains(cb_Units.Text))
             {
                 cb_Units.Text = lastItemSelected;
@@ -137,7 +144,6 @@ namespace FileBackApp
         private void t_Progress_Tick(object sender, EventArgs e)
         {
             UpdateProgressBar();
-            Text = $"tickInterval {tickInterval}, pb_CopyTime {pb_CopyTime.Value}";
         }
 
         private void UpdateProgressBar()
