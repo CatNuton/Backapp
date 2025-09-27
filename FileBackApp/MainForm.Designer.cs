@@ -1,6 +1,6 @@
 ﻿namespace FileBackApp
 {
-    partial class mainForm
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,10 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tlp_UI = new System.Windows.Forms.TableLayoutPanel();
-            this.tb_From = new System.Windows.Forms.TextBox();
-            this.tb_To = new System.Windows.Forms.TextBox();
             this.nud_Time = new System.Windows.Forms.NumericUpDown();
             this.btn_SearchFrom = new System.Windows.Forms.Button();
             this.btn_SearchTo = new System.Windows.Forms.Button();
@@ -44,6 +42,8 @@
             this.rtb_Logs = new System.Windows.Forms.RichTextBox();
             this.pb_CopyTime = new System.Windows.Forms.ProgressBar();
             this.btn_Start = new System.Windows.Forms.Button();
+            this.cb_Source = new System.Windows.Forms.ComboBox();
+            this.cb_Directory = new System.Windows.Forms.ComboBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.t_File = new System.Windows.Forms.Timer(this.components);
             this.t_Progress = new System.Windows.Forms.Timer(this.components);
@@ -60,8 +60,6 @@
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tlp_UI.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.tlp_UI.Controls.Add(this.tb_From, 2, 1);
-            this.tlp_UI.Controls.Add(this.tb_To, 2, 2);
             this.tlp_UI.Controls.Add(this.nud_Time, 2, 3);
             this.tlp_UI.Controls.Add(this.btn_SearchFrom, 4, 1);
             this.tlp_UI.Controls.Add(this.btn_SearchTo, 4, 2);
@@ -73,6 +71,8 @@
             this.tlp_UI.Controls.Add(this.rtb_Logs, 2, 4);
             this.tlp_UI.Controls.Add(this.pb_CopyTime, 2, 6);
             this.tlp_UI.Controls.Add(this.btn_Start, 1, 6);
+            this.tlp_UI.Controls.Add(this.cb_Source, 2, 1);
+            this.tlp_UI.Controls.Add(this.cb_Directory, 2, 2);
             this.tlp_UI.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_UI.Location = new System.Drawing.Point(0, 0);
             this.tlp_UI.Name = "tlp_UI";
@@ -87,28 +87,6 @@
             this.tlp_UI.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tlp_UI.Size = new System.Drawing.Size(501, 186);
             this.tlp_UI.TabIndex = 0;
-            // 
-            // tb_From
-            // 
-            this.tlp_UI.SetColumnSpan(this.tb_From, 2);
-            this.tb_From.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tb_From.Location = new System.Drawing.Point(106, 8);
-            this.tb_From.Name = "tb_From";
-            this.tb_From.Size = new System.Drawing.Size(336, 20);
-            this.tb_From.TabIndex = 0;
-            this.tb_From.WordWrap = false;
-            this.tb_From.TextChanged += new System.EventHandler(this.value_Changed);
-            // 
-            // tb_To
-            // 
-            this.tlp_UI.SetColumnSpan(this.tb_To, 2);
-            this.tb_To.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tb_To.Location = new System.Drawing.Point(106, 37);
-            this.tb_To.Name = "tb_To";
-            this.tb_To.Size = new System.Drawing.Size(336, 20);
-            this.tb_To.TabIndex = 2;
-            this.tb_To.WordWrap = false;
-            this.tb_To.TextChanged += new System.EventHandler(this.value_Changed);
             // 
             // nud_Time
             // 
@@ -250,6 +228,26 @@
             this.btn_Start.UseVisualStyleBackColor = true;
             this.btn_Start.Click += new System.EventHandler(this.btn_Start_Click);
             // 
+            // cb_Source
+            // 
+            this.tlp_UI.SetColumnSpan(this.cb_Source, 2);
+            this.cb_Source.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cb_Source.FormattingEnabled = true;
+            this.cb_Source.Location = new System.Drawing.Point(106, 8);
+            this.cb_Source.Name = "cb_Source";
+            this.cb_Source.Size = new System.Drawing.Size(336, 21);
+            this.cb_Source.TabIndex = 0;
+            // 
+            // cb_Directory
+            // 
+            this.tlp_UI.SetColumnSpan(this.cb_Directory, 2);
+            this.cb_Directory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cb_Directory.FormattingEnabled = true;
+            this.cb_Directory.Location = new System.Drawing.Point(106, 37);
+            this.cb_Directory.Name = "cb_Directory";
+            this.cb_Directory.Size = new System.Drawing.Size(336, 21);
+            this.cb_Directory.TabIndex = 2;
+            // 
             // t_File
             // 
             this.t_File.Tick += new System.EventHandler(this.timer_Tick);
@@ -259,7 +257,7 @@
             this.t_Progress.Interval = 1000;
             this.t_Progress.Tick += new System.EventHandler(this.t_Progress_Tick);
             // 
-            // mainForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -268,7 +266,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "mainForm";
+            this.Name = "MainForm";
             this.Text = "Backapp";
             this.tlp_UI.ResumeLayout(false);
             this.tlp_UI.PerformLayout();
@@ -284,8 +282,6 @@
         private System.Windows.Forms.Button btn_SearchTo;
         private System.Windows.Forms.NumericUpDown nud_Time;
         private System.Windows.Forms.Label lbl_Time;
-        private System.Windows.Forms.TextBox tb_From;
-        private System.Windows.Forms.TextBox tb_To;
         private System.Windows.Forms.Button btn_Start;
         private System.Windows.Forms.Label lbl_From;
         private System.Windows.Forms.Label lbl_To;
@@ -296,5 +292,7 @@
         private System.Windows.Forms.CheckBox cb_Overwrite;
         private System.Windows.Forms.Timer t_Progress;
         private System.Windows.Forms.ComboBox cb_Units;
+        private System.Windows.Forms.ComboBox cb_Source;
+        private System.Windows.Forms.ComboBox cb_Directory;
     }
 }
