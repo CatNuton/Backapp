@@ -207,5 +207,25 @@ namespace FileBackApp
                 throw;
             }
         }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            var lineSkip = 3;
+            var path = $"{Environment.CurrentDirectory}\\Logs";
+            if (!FileSystem.DirectoryExists(path))
+            {
+                FileSystem.CreateDirectory(path);
+            }
+            if (rtb_Logs.Lines.Length > lineSkip)
+            {
+                using (var logFile = File.CreateText($"{path}\\log{DateTime.Now:yyyy.MM.dd.HH.mm.ss}.txt"))
+                {
+                    for (int i = lineSkip; i < rtb_Logs.Lines.Length; i++)
+                    {
+                        logFile.WriteLine(rtb_Logs.Lines[i]);
+                    }
+                } 
+            }
+        }
     }
 }
