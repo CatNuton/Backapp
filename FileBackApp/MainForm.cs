@@ -27,7 +27,7 @@ namespace FileBackApp
         {
             InitializeComponent();
             cb_Units.SelectedIndex = 1;
-            rtb_Logs.AppendText($"Backapp launched at {DateTime.UtcNow}\nFound a bug? Write here: " +
+            rtb_Logs.AppendText($"Backapp launched at {DateTime.Now:HH:mm:ss}\nFound a bug? Write here: " +
                 $"https://github.com/CatNuton/Backapp/issues");
             LoadItemsFromMemory(cb_Source, Settings.Default.SourcePath);
             LoadItemsFromMemory(cb_Directory, Settings.Default.DirectoryPath);
@@ -122,14 +122,13 @@ namespace FileBackApp
         {
             try
             {
-                var path = "";
+                string path;
                 var directoryInfo = new DirectoryInfo(cb_Source.Text);
                 if (!cb_Overwrite.Checked)
                 {
                     path = $"{cb_Directory.Text}\\{directoryInfo.Name}-" +
-                                $"{DateTime.Now.ToString().Replace(":", ".")}";
-                    FileSystem.CreateDirectory($"{cb_Directory.Text}\\{directoryInfo.Name}-" +
-                        $"{DateTime.Now.ToString().Replace(":", ".")}");
+                                $"{DateTime.Now:yyyy.MM.dd.HH.mm.ss}";
+                    FileSystem.CreateDirectory($"{path}");
                 }
                 else
                 {
@@ -138,7 +137,7 @@ namespace FileBackApp
                         FileSystem.CreateDirectory(path);
                 }
                 FileSystem.CopyDirectory(cb_Source.Text, path, true);
-                ColorText($"\nCopied {cb_Source.Text} to {path} at {DateTime.Now.TimeOfDay}", Color.Green);
+                ColorText($"\nCopied {cb_Source.Text} to {path} at {DateTime.Now:HH:mm:ss}", Color.Green);
                 rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
             }
             catch (Exception ex)
