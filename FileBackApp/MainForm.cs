@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using FileBackApp.Properties;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -14,45 +16,48 @@ using System.Windows.Forms;
 
 namespace FileBackApp
 {
-    public partial class mainForm : Form
+    public partial class MainForm : Form
     {
         int tickInterval;
         int timeInterval;
         string unit;
         string lastItemSelected;
 
-        public mainForm()
+        public MainForm()
         {
             InitializeComponent();
             cb_Units.SelectedIndex = 1;
             rtb_Logs.AppendText($"Backapp launched at {DateTime.UtcNow}\nFound a bug? Write here: " +
                 $"https://github.com/CatNuton/Backapp/issues");
+            LoadItemsFromMemory(cb_Source, Settings.Default.SourcePath);
+            LoadItemsFromMemory(cb_Directory, Settings.Default.DirectoryPath);
         }
+
 
         private void btn_SearchFrom_Click(object sender, EventArgs e)
         {
-            tb_From.Text = Search();
+            cb_Source.Text = Search();
         }
 
         private string Search()
         {
-            return folderBrowserDialog.ShowDialog() == DialogResult.OK ? folderBrowserDialog.SelectedPath : tb_From.Text;
+            return folderBrowserDialog.ShowDialog() == DialogResult.OK ? folderBrowserDialog.SelectedPath : cb_Source.Text;
         }
 
         private void btn_SearchTo_Click(object sender, EventArgs e)
         {
-            tb_To.Text = Search();
+            cb_Directory.Text = Search();
         }
 
         private void btn_Start_Click(object sender, EventArgs e)
         {
-            if (!FileSystem.DirectoryExists(tb_From.Text))
+            if (!FileSystem.DirectoryExists(cb_Source.Text))
             {
                 MessageBox.Show("The source directory does not exist or incorrect.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else if (!Path.IsPathRooted(tb_To.Text))
+            else if (!Path.IsPathRooted(cb_Directory.Text))
             {
                 MessageBox.Show("The copy path is incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -66,6 +71,9 @@ namespace FileBackApp
                 t_File.Start();
                 t_Progress.Start();
                 UpdateProgressBar();
+                Settings.Default.SourcePath = AddItemsToMemory(cb_Source);
+                Settings.Default.DirectoryPath = AddItemsToMemory(cb_Directory);
+                Settings.Default.Save();
                 btn_Start.Text = "Stop loop";
             }
             else
@@ -73,6 +81,31 @@ namespace FileBackApp
                 Stop();
                 CheckToStart();
             }
+        }
+
+        private void LoadItemsFromMemory(ComboBox comboBox, StringCollection stringCollection)
+        {
+            if (stringCollection != null && stringCollection.Count > 0)
+            {
+                comboBox.Items.AddRange(stringCollection.Cast<string>().ToArray());
+            }
+        }
+
+        private StringCollection AddItemsToMemory(ComboBox comboBox)
+        {
+            var items = new StringCollection();
+            if (!comboBox.Items.Contains(comboBox.Text))
+            {
+                comboBox.Items.Add(comboBox.Text);
+            }
+            foreach (string item in comboBox.Items)
+            {
+                if (!items.Contains(item))
+                {
+                    items.Add(item);
+                }
+            }
+            return items;
         }
 
         private void Stop()
@@ -90,25 +123,23 @@ namespace FileBackApp
             try
             {
                 var path = "";
-                var directoryInfo = new DirectoryInfo(tb_From.Text);
+                var directoryInfo = new DirectoryInfo(cb_Source.Text);
                 if (!cb_Overwrite.Checked)
                 {
-                    path = $"{tb_To.Text}\\{directoryInfo.Name}-" +
+                    path = $"{cb_Directory.Text}\\{directoryInfo.Name}-" +
                                 $"{DateTime.Now.ToString().Replace(":", ".")}";
-                    FileSystem.CreateDirectory($"{tb_To.Text}\\{directoryInfo.Name}-" +
+                    FileSystem.CreateDirectory($"{cb_Directory.Text}\\{directoryInfo.Name}-" +
                         $"{DateTime.Now.ToString().Replace(":", ".")}");
                 }
                 else
                 {
-                    path = $"{tb_To.Text}\\{directoryInfo.Name}";
+                    path = $"{cb_Directory.Text}\\{directoryInfo.Name}";
                     if (!Directory.Exists(path))
                         FileSystem.CreateDirectory(path);
                 }
-                FileSystem.CopyDirectory(tb_From.Text, path, true);
-                ColorText($"\nCopied {tb_From.Text} to {path} at {DateTime.Now.TimeOfDay}", Color.Green);
+                FileSystem.CopyDirectory(cb_Source.Text, path, true);
+                ColorText($"\nCopied {cb_Source.Text} to {path} at {DateTime.Now.TimeOfDay}", Color.Green);
                 rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
-                tickInterval = 0;
-                pb_CopyTime.Value = 0;
             }
             catch (Exception ex)
             {
@@ -133,7 +164,7 @@ namespace FileBackApp
 
         private void CheckToStart()
         {
-            btn_Start.Enabled = (!string.IsNullOrWhiteSpace(tb_From.Text) && !string.IsNullOrWhiteSpace(tb_To.Text)
+            btn_Start.Enabled = (!string.IsNullOrWhiteSpace(cb_Source.Text) && !string.IsNullOrWhiteSpace(cb_Directory.Text)
                             && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text) || t_File.Enabled);
             if (!cb_Units.Items.Contains(cb_Units.Text))
             {
@@ -148,6 +179,11 @@ namespace FileBackApp
 
         private void UpdateProgressBar()
         {
+            if (tickInterval == t_File.Interval)
+            {
+                tickInterval = 0;
+                pb_CopyTime.Value = 0;
+            }
             tickInterval += t_Progress.Interval;
             int percent = (int)(((double)tickInterval / t_File.Interval) * pb_CopyTime.Maximum);
             percent = Math.Max(0, Math.Min(100, percent));
