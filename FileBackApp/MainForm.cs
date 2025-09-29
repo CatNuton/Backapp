@@ -137,6 +137,7 @@ namespace FileBackApp
                         FileSystem.CreateDirectory(path);
                 }
                 FileSystem.CopyDirectory(cb_Source.Text, path, true);
+                pb_CopyTime.Value = 100;
                 ColorText($"\nCopied {cb_Source.Text} to {path} at {DateTime.Now:HH:mm:ss}", Color.Green);
                 rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
             }
@@ -180,12 +181,13 @@ namespace FileBackApp
         {
             if (tickInterval == t_File.Interval)
             {
+                pb_CopyTime.Value = 100;
                 tickInterval = 0;
-                pb_CopyTime.Value = 0;
             }
             tickInterval += t_Progress.Interval;
-            int percent = (int)(((double)tickInterval / t_File.Interval) * pb_CopyTime.Maximum);
-            percent = Math.Max(0, Math.Min(100, percent));
+            var estimatedTime = t_File.Interval - tickInterval;
+            int percent = (int)(((double)estimatedTime / t_File.Interval) * pb_CopyTime.Maximum);
+            //percent = Math.Max(0, Math.Min(100, percent));
             pb_CopyTime.Value = percent;
         }
 
