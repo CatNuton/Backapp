@@ -20,9 +20,9 @@ namespace FileBackAppGUI
 {
     public partial class MainForm : Form
     {
-        string lastItemSelected;
-        List<string> logs = new List<string>();
-        BackupService backupService = new BackupService();
+        private string lastItemSelected;
+        private List<string> logs = new List<string>();
+        private BackupService backupService = new BackupService();
 
         public MainForm()
         {

@@ -8,8 +8,8 @@ namespace FileBackApp.Lib
 {
     public class BackupService
     {
-        Timer timerFull;
-        int interval;
+        private Timer timerFull;
+        private int interval;
 
         public bool Enabled { get; private set; }
         public string Source { get; set; }

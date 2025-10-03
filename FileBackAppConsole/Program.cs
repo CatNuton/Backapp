@@ -10,8 +10,8 @@ namespace FileBackAppConsole
 {
     internal class Program
     {
-        static Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        static BackupService backupService = new BackupService();
+        private static Dictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private static BackupService backupService = new BackupService();
 
         static void Main(string[] args)
         {
