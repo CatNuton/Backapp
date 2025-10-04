@@ -12,3 +12,28 @@ Hardcore games with one save file. If your character dies or the game crashes, y
 
 $${\color{green}Screenshot \space from \space Hollow \space Knight: \space Silksong \space Gameplay \space - \space The \space First \space 14 \space Minutes \space by \space \color{red}IGN}$$
 [Source](https://www.youtube.com/watch?v=BFBOi-rpcFE)
+
+ℹ How to use (GUI)
+---
+![Screenshot](https://github.com/user-attachments/assets/f55d5f83-f54d-48ed-9d03-8996f9e8efa8)
+
+- Directory - The directory you want to copy
+- Copy to - The directory you want to copy your folder to
+- Time - The time after which the copy will be created. The first field specifies the time, and the second field specifies the units of measurement (seconds, minutes, hours)
+- Overwrite files - indicates whether to overwrite the copied file or create a new copy
+- Archive Directory - indicates whether to save files in a .zip archive or in a folder
+
+ℹ How to use (Console)
+---
+Commands list
+```
+--directory="DISK:\PATH_TO_YOUR_DIRECTORY\DIRECTORY" --dir="DISK:\PATH_TO_DIRECTORY" --time="TIME" --units="UNITS (S, M, H)" --overwrite="TRUE OR FALSE" --archive="TRUE OR FALSE"
+```
+
+Commands can be separated by "-" or "\". Value needs to be written in quotation marks
+
+- Directory - The directory you want to copy
+- Dir - The directory you want to copy your folder to
+- Time - The time after which the copy will be created. The first field specifies the time, and the second field specifies the units of measurement (seconds, minutes, hours)
+- Overwrite - indicates whether to overwrite the copied file or create a new copy
+- Archive - indicates whether to save files in a .zip archive or in a folder
