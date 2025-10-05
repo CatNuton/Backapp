@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FileBackAppGUI
+namespace FileBackApp.GUI
 {
     internal static class Program
     {

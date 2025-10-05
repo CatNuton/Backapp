@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FileBackApp.Lib;
 
-namespace FileBackAppConsole
+namespace FileBackApp.Console
 {
     internal class Program
     {

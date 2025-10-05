@@ -1,4 +1,4 @@
-﻿namespace FileBackAppGUI
+﻿namespace FileBackApp.GUI
 {
     partial class MainForm
     {

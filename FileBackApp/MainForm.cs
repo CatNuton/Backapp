@@ -1,5 +1,5 @@
 ﻿using FileBackApp.Lib;
-using FileBackAppGUI.Properties;
+using FileBackApp.GUI.Properties;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FileBackAppGUI
+namespace FileBackApp.GUI
 {
     public partial class MainForm : Form
     {
