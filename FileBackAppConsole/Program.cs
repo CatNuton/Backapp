@@ -33,11 +33,11 @@ namespace FileBackAppConsole
                 }
                 backupService.Source = dictionary.ContainsKey(
                     $"{nameof(backupService.Source)}") ? dictionary[$"{nameof(backupService.Source)}"] : "";
-                backupService.Dir = dictionary.ContainsKey(
-                    $"{nameof(backupService.Dir)}") ? dictionary[$"{nameof(backupService.Dir)}"] : "";
-                backupService.Time = dictionary.ContainsKey(
-                    $"{nameof(backupService.Time)}") &&
-                    int.TryParse(dictionary[$"{nameof(backupService.Time)}"], out int t) ? t : 0;
+                backupService.Target = dictionary.ContainsKey(
+                    $"{nameof(backupService.Target)}") ? dictionary[$"{nameof(backupService.Target)}"] : "";
+                backupService.Interval = dictionary.ContainsKey(
+                    $"{nameof(backupService.Interval)}") &&
+                    int.TryParse(dictionary[$"{nameof(backupService.Interval)}"], out int t) ? t : 0;
                 backupService.Units = dictionary.ContainsKey(
                     $"{nameof(backupService.Units)}") ? dictionary[$"{nameof(backupService.Units)}"] : "";
                 backupService.Overwrite = dictionary.ContainsKey(
@@ -51,12 +51,12 @@ namespace FileBackAppConsole
             {
                 Console.Write("Source folder: ");
                 backupService.Source = Console.ReadLine();
-                backupService.DirectoryExists();
+                backupService.IsDirectoryExists();
                 Console.Write("Target folder: ");
-                backupService.Dir = Console.ReadLine();
-                backupService.PathValid();
+                backupService.Target = Console.ReadLine();
+                backupService.IsPathValid();
                 Console.Write("Time (numbers only): ");
-                backupService.Time = int.Parse(Console.ReadLine());
+                backupService.Interval = int.Parse(Console.ReadLine());
                 Console.Write("Units (s, m, h): ");
                 backupService.Units = Console.ReadLine();
                 Console.Write("Overwite (true, false): ");

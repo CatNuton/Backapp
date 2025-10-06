@@ -80,8 +80,8 @@ namespace FileBackAppGUI
             {
                 var unitChar = cb_Units.Text.ToLower().ToCharArray()[0].ToString();
                 backupService.Source = cb_Source.Text;
-                backupService.Dir = cb_Directory.Text;
-                backupService.Time = (int)nud_Time.Value;
+                backupService.Target = cb_Directory.Text;
+                backupService.Interval = (int)nud_Time.Value;
                 backupService.Units = unitChar;
                 backupService.Overwrite = cb_Overwrite.Checked;
                 backupService.Archive = cb_Archive.Checked;

@@ -13,8 +13,8 @@ namespace FileBackApp.Lib
 
         public bool Enabled { get; private set; }
         public string Source { get; set; }
-        public string Dir { get; set; }
-        public int Time { get; set; }
+        public string Target { get; set; }
+        public int Interval { get; set; }
         public string Units { get; set; }
         public bool Overwrite { get; set; }
         public bool Archive { get; set; }
@@ -42,12 +42,12 @@ namespace FileBackApp.Lib
                 var directoryInfo = new DirectoryInfo(Source);
                 if (!Overwrite)
                 {
-                    path = $"{Dir}\\{directoryInfo.Name}-" +
+                    path = $"{Target}\\{directoryInfo.Name}-" +
                         $"{DateTime.Now:yyyy.MM.dd.HH.mm.ss}";
                 }
                 else
                 {
-                    path = $"{Dir}\\{directoryInfo.Name}";
+                    path = $"{Target}\\{directoryInfo.Name}";
                     if (Archive)
                     {
                         File.Delete($"{path}.zip");
@@ -84,26 +84,26 @@ namespace FileBackApp.Lib
 
         public void Start()
         {
-            DirectoryExists();
-            PathValid();
-            interval = ConvertTime(Time, Units);
+            IsDirectoryExists();
+            IsPathValid();
+            interval = ConvertTime(Interval, Units);
             timerFull.Interval = interval;
             timerFull.Start();
             Enabled = true;
-            Log($"Backup service started. Next copy every {Time} {Units.ToLower()}.", ConsoleColor.DarkGray);
+            Log($"Backup service started. Next copy every {Interval} {Units.ToLower()}.", ConsoleColor.DarkGray);
             OnStart?.Invoke(new EventArgs());
         }
 
-        public void PathValid()
+        public void IsPathValid()
         {
-            if (!Path.IsPathRooted(Dir))
+            if (!Path.IsPathRooted(Target))
             {
                 Log("The destination Directory is not valid.", ConsoleColor.Red);
                 return;
             }
         }
 
-        public void DirectoryExists()
+        public void IsDirectoryExists()
         {
             if (!Directory.Exists(Source))
             {
