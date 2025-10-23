@@ -49,27 +49,27 @@ namespace FileBackAppConsole
             }
             else
             {
-                Console.Write("Source folder: ");
-                backupService.Source = Console.ReadLine();
+                System.Console.Write("Source folder: ");
+                backupService.Source = System.Console.ReadLine();
                 backupService.DirectoryExists();
-                Console.Write("Target folder: ");
-                backupService.Dir = Console.ReadLine();
+                System.Console.Write("Target folder: ");
+                backupService.Dir = System.Console.ReadLine();
                 backupService.PathValid();
-                Console.Write("Time (numbers only): ");
-                backupService.Time = int.Parse(Console.ReadLine());
-                Console.Write("Units (s, m, h): ");
-                backupService.Units = Console.ReadLine();
-                Console.Write("Overwite (true, false): ");
-                backupService.Overwrite = bool.Parse(Console.ReadLine());
-                Console.Write("Archive (true, false): ");
-                backupService.Archive = bool.Parse(Console.ReadLine());
+                System.Console.Write("Time (numbers only): ");
+                backupService.Time = int.Parse(System.Console.ReadLine());
+                System.Console.Write("Units (s, m, h): ");
+                backupService.Units = System.Console.ReadLine();
+                System.Console.Write("Overwite (true, false): ");
+                backupService.Overwrite = bool.Parse(System.Console.ReadLine());
+                System.Console.Write("Archive (true, false): ");
+                backupService.Archive = bool.Parse(System.Console.ReadLine());
             }
 
-            Console.WriteLine();
+            System.Console.WriteLine();
 
             backupService.Start();
             ColorText("Write s to stop the application.", ConsoleColor.DarkGray);
-            while (Console.ReadLine() == "s")
+            while (System.Console.ReadLine() == "s")
             {
                 return;
             }
@@ -77,9 +77,9 @@ namespace FileBackAppConsole
 
         private static void ColorText(string message, ConsoleColor color)
         {
-            Console.ForegroundColor = color;
-            Console.WriteLine(message);
-            Console.ResetColor();
+            System.Console.ForegroundColor = color;
+            System.Console.WriteLine(message);
+            System.Console.ResetColor();
         }
     }
 }
