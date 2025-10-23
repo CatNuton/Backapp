@@ -38,7 +38,7 @@ namespace FileBackApp.Lib
         {
             try
             {
-                string path;
+                var path = string.Empty;
                 var directoryInfo = new DirectoryInfo(Source);
                 if (!Overwrite)
                 {
@@ -120,7 +120,7 @@ namespace FileBackApp.Lib
 
         public int ConvertTime(int time, string unit)
         {
-            int result = 0;
+            var result = 0;
             switch (unit)
             {
                 case "s":
