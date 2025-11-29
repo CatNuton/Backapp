@@ -19,6 +19,7 @@ namespace FileBackAppConsole
             {
                 ColorText(e.Message, e.Color);
             };
+            var input = "";
             if (args.Length > 0)
             {
                 foreach (var arg in args)
@@ -31,47 +32,72 @@ namespace FileBackAppConsole
                         dictionary[key] = value;
                     }
                 }
+
                 backupService.Source = dictionary.ContainsKey(
                     $"{nameof(backupService.Source)}") ? dictionary[$"{nameof(backupService.Source)}"] : "";
+                if (string.IsNullOrWhiteSpace(backupService.Source))
+                {
+                    ColorText("Source folder is required!", ConsoleColor.Red);
+                    return;
+                }
+
                 backupService.Dir = dictionary.ContainsKey(
-                    $"{nameof(backupService.Dir)}") ? dictionary[$"{nameof(backupService.Dir)}"] : "";
+                    $"{nameof(backupService.Dir)}") &&
+                    !string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Dir)}"])
+                    ? dictionary[$"{nameof(backupService.Dir)}"] : DefaultDirectory(dictionary[$"{nameof(backupService.Dir)}"]);
+
                 backupService.Time = dictionary.ContainsKey(
                     $"{nameof(backupService.Time)}") &&
-                    int.TryParse(dictionary[$"{nameof(backupService.Time)}"], out int t) ? t : 0;
+                    int.TryParse(dictionary[$"{nameof(backupService.Time)}"], out int t) ? t : int.Parse(DefaultTime(input));
+
                 backupService.Units = dictionary.ContainsKey(
-                    $"{nameof(backupService.Units)}") ? dictionary[$"{nameof(backupService.Units)}"] : "";
+                    $"{nameof(backupService.Units)}") &&
+                    !string.IsNullOrWhiteSpace(backupService.Units)
+                    ? dictionary[$"{nameof(backupService.Units)}"] : DefaultUnits(input);
+
                 backupService.Overwrite = dictionary.ContainsKey(
                     $"{nameof(backupService.Overwrite)}")
-                    && bool.TryParse(dictionary[$"{nameof(backupService.Overwrite)}"], out bool o) ? o : false;
+                    && bool.TryParse(dictionary[$"{nameof(backupService.Overwrite)}"], out bool b) ? b :
+                    bool.Parse(DefaultOverwrite(backupService.Overwrite.ToString()));
+
                 backupService.Archive = dictionary.ContainsKey(
                     $"{nameof(backupService.Archive)}")
-                    && bool.TryParse(dictionary[$"{nameof(backupService.Archive)}"], out bool a) ? a : false;
+                    && bool.TryParse(dictionary[$"{nameof(backupService.Archive)}"], out bool a) ? a : 
+                    bool.Parse(DefaultArchive(backupService.Archive.ToString()));
             }
             else
             {
-                System.Console.Write("Source folder: ");
-                backupService.Source = System.Console.ReadLine();
-                backupService.DirectoryExists();
-                System.Console.Write("Target folder: ");
-                backupService.Dir = System.Console.ReadLine();
-                backupService.PathValid();
-                System.Console.Write("Time (numbers only): ");
-                backupService.Time = int.Parse(System.Console.ReadLine());
-                System.Console.Write("Units (s, m, h): ");
-                backupService.Units = System.Console.ReadLine();
-                System.Console.Write("Overwite (true, false): ");
-                backupService.Overwrite = bool.Parse(System.Console.ReadLine());
-                System.Console.Write("Archive (true, false): ");
-                backupService.Archive = bool.Parse(System.Console.ReadLine());
+                System.Console.WriteLine($"Source folder. This field is required!");
+                input = System.Console.ReadLine();
+                backupService.Source = input;
+
+                System.Console.WriteLine($"Target folder. Press ENTER to set default value Dir={AppDomain.CurrentDomain.BaseDirectory}");
+                input = DefaultDirectory(System.Console.ReadLine());
+                backupService.Dir = input;
+
+                System.Console.Write("Time (numbers only). Press ENTER to set default value Time=30");
+                input = DefaultTime(System.Console.ReadLine());
+                backupService.Time = int.Parse(input);//
+
+                System.Console.Write("Units (s, m, h). Press ENTER to set default value Units=s");
+                input = DefaultUnits(System.Console.ReadLine());
+                backupService.Units = input;
+
+                System.Console.Write("Overwite (true, false). Press ENTER to set default value Overwrite=false");
+                input = DefaultOverwrite(System.Console.ReadLine());
+                backupService.Overwrite = bool.Parse(input);//
+
+                System.Console.Write("Archive (true, false). Press ENTER to set default value Archive=true");
+                input = DefaultArchive(System.Console.ReadLine());
+                backupService.Archive = bool.Parse(input);//
             }
 
             System.Console.WriteLine();
 
             backupService.Start();
-            ColorText("Write s to stop the application.", ConsoleColor.DarkGray);
-            while (System.Console.ReadLine() == "s")
+            ColorText("Write ENTER to stop the application.", ConsoleColor.DarkGray);
+            while (System.Console.ReadLine() == null)
             {
-                return;
             }
         }
 
@@ -80,6 +106,51 @@ namespace FileBackAppConsole
             System.Console.ForegroundColor = color;
             System.Console.WriteLine(message);
             System.Console.ResetColor();
+        }
+
+        public static string DefaultDirectory(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = AppDomain.CurrentDomain.BaseDirectory;
+            }
+            return input;
+        }
+
+        public static string DefaultTime(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = FileBackApp.Lib.Properties.Settings.Default.Time.ToString();
+            }
+            return input;
+        }
+
+        public static string DefaultUnits(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = FileBackApp.Lib.Properties.Settings.Default.Units;
+            }
+            return input;
+        }
+
+        public static string DefaultOverwrite(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = FileBackApp.Lib.Properties.Settings.Default.Overwrite.ToString();
+            }
+            return input;
+        }
+
+        public static string DefaultArchive(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                input = FileBackApp.Lib.Properties.Settings.Default.Archive.ToString();
+            }
+            return input;
         }
     }
 }
