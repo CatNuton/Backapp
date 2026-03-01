@@ -102,20 +102,20 @@ namespace FileBackAppConsole
                     }
                 }
 
-                if (dictionary.ContainsKey(nameof(backupService.Source)))
+                if (dictionary.ContainsKey(nameof(backupService.Overwrite)))
                 {
-                    if (string.IsNullOrWhiteSpace(dictionary[nameof(backupService.Source)]))
+                    if (string.IsNullOrWhiteSpace(dictionary[nameof(backupService.Overwrite)]))
                     {
-                        backupService.Overwrite = Helper.ConvertBool(DefaultOverwrite(dictionary[nameof(backupService.Source)]));
+                        backupService.Overwrite = Helper.ConvertBool(DefaultOverwrite(dictionary[nameof(backupService.Overwrite)]));
                     }
-                    else if (!Helper.IsBool(dictionary[nameof(backupService.Source)]))
+                    else if (!Helper.IsBool(dictionary[nameof(backupService.Overwrite)]))
                     {
                         ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
                         return;
                     }
                     else
                     {
-                        backupService.Overwrite = Helper.ConvertBool(dictionary[nameof(backupService.Source)]);
+                        backupService.Overwrite = Helper.ConvertBool(dictionary[nameof(backupService.Overwrite)]);
                     }
                 }
 
