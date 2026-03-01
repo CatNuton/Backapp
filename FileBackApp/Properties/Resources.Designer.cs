@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FileBackApp.GUI.Properties
+namespace FileBackApp.Properties
 {
 
 
