@@ -1,16 +1,15 @@
-﻿using System.Resources;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FileBackApp")]
+[assembly: AssemblyTitle("FileBackApp.Lib")]
 [assembly: AssemblyDescription("This app automatically copies the specified directory at a user-defined time interval")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Kyryl Koblyk")]
-[assembly: AssemblyProduct("FileBackApp")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("FileBackApp.Lib")]
 [assembly: AssemblyCopyright("Copyright © 2025 Kyryl Koblyk")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -21,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("243e77a2-c570-45b4-a2aa-dd381e1bdac7")]
+[assembly: Guid("15fc0b87-7060-4ff3-b2fb-1b11418b64c4")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,4 +31,3 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
-[assembly: NeutralResourcesLanguage("en")]
