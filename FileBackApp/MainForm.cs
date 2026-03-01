@@ -47,7 +47,6 @@ namespace FileBackAppGUI
             };
         }
 
-
         private void btn_SearchFrom_Click(object sender, EventArgs e)
         {
             cb_Source.Text = Search();
@@ -65,22 +64,27 @@ namespace FileBackAppGUI
 
         private void btn_Start_Click(object sender, EventArgs e)
         {
-            if (!FileSystem.DirectoryExists(cb_Source.Text))
+            if (!Helper.IsDirectoryExists(cb_Source.Text))
             {
                 MessageBox.Show("The source directory does not exist or incorrect.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            else if (!Path.IsPathRooted(cb_Directory.Text))
+            if (!Helper.IsPathValid(cb_Directory.Text) || !Helper.IsDriveExists(cb_Directory.Text[0].ToString()))
             {
                 MessageBox.Show("The copy path is incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (!Helper.IsNaturalNumber(nud_Time.Value.ToString()))
+            {
+                MessageBox.Show("The given time value is not a number or not natural.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (!backupService.Enabled)
             {
                 var unitChar = cb_Units.Text.ToLower().ToCharArray()[0].ToString();
-                backupService.Source = cb_Source.Text;
-                backupService.Dir = cb_Directory.Text;
+                backupService.Source = cb_Source.Text.Replace("\"", string.Empty);
+                backupService.Dir = cb_Directory.Text.Replace("\"", string.Empty);
                 backupService.Time = (int)nud_Time.Value;
                 backupService.Units = unitChar;
                 backupService.Overwrite = cb_Overwrite.Checked;

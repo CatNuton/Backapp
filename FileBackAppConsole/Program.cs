@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FileBackApp.Lib;
+using FileBackApp.Lib.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FileBackApp.Lib;
 
 namespace FileBackAppConsole
 {
@@ -19,7 +20,6 @@ namespace FileBackAppConsole
             {
                 ColorText(e.Message, e.Color);
             };
-            var input = "";
             if (args.Length > 0)
             {
                 foreach (var arg in args)
@@ -33,124 +33,249 @@ namespace FileBackAppConsole
                     }
                 }
 
-                backupService.Source = dictionary.ContainsKey(
-                    $"{nameof(backupService.Source)}") ? dictionary[$"{nameof(backupService.Source)}"] : "";
-                if (string.IsNullOrWhiteSpace(backupService.Source))
+                if (dictionary.ContainsKey(nameof(backupService.Source)))
                 {
-                    ColorText("Source folder is required!", ConsoleColor.Red);
-                    return;
+                    if (string.IsNullOrWhiteSpace(dictionary[nameof(backupService.Source)]))
+                    {
+                        ColorText("Source folder is required!", ConsoleColor.Red);
+                        return;
+                    }
+                    else if (!Helper.IsDirectoryExists(dictionary[nameof(backupService.Source)]))
+                    {
+                        ColorText("The source directory does not exist " +
+                            "or the path contains invalid characters. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    backupService.Source = dictionary[nameof(backupService.Source)];
                 }
 
-                backupService.Dir = dictionary.ContainsKey(
-                    $"{nameof(backupService.Dir)}") &&
-                    !string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Dir)}"])
-                    ? dictionary[$"{nameof(backupService.Dir)}"] : DefaultDirectory(dictionary[$"{nameof(backupService.Dir)}"]);
+                if (dictionary.ContainsKey($"{nameof(backupService.Dir)}"))
+                {
+                    if (string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Dir)}"]))
+                    {
+                        backupService.Dir = DefaultDirectory(dictionary[$"{nameof(backupService.Dir)}"]);
+                    }
+                    else if (!Helper.IsPathValid(dictionary[$"{nameof(backupService.Dir)}"]) ||
+                        !Helper.IsDriveExists(dictionary[$"{nameof(backupService.Dir)}"][0].ToString()))
+                    {
+                        ColorText("The path contains invalid characters. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    else
+                    {
+                        backupService.Dir = dictionary[$"{nameof(backupService.Dir)}"];
+                    }
+                }
 
-                backupService.Time = dictionary.ContainsKey(
-                    $"{nameof(backupService.Time)}") &&
-                    int.TryParse(dictionary[$"{nameof(backupService.Time)}"], out int t) ? t : int.Parse(DefaultTime(input));
+                if (dictionary.ContainsKey($"{nameof(backupService.Time)}"))
+                {
+                    if (string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Time)}"]))
+                    {
+                        backupService.Time = int.Parse(DefaultTime(dictionary[$"{nameof(backupService.Time)}"]));
+                    }
+                    else if (!Helper.IsNaturalNumber(dictionary[$"{nameof(backupService.Time)}"]))
+                    {
+                        ColorText("The given time value is not a number" +
+                            " or not natural. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    else
+                    {
+                        backupService.Time = int.Parse(dictionary[$"{nameof(backupService.Time)}"]);
+                    }
+                }
 
-                backupService.Units = dictionary.ContainsKey(
-                    $"{nameof(backupService.Units)}") &&
-                    !string.IsNullOrWhiteSpace(backupService.Units)
-                    ? dictionary[$"{nameof(backupService.Units)}"] : DefaultUnits(input);
+                if (dictionary.ContainsKey($"{nameof(backupService.Units)}"))
+                {
+                    if (string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Units)}"]))
+                    {
+                        backupService.Units = DefaultUnits(dictionary[$"{nameof(backupService.Units)}"]);
+                    }
+                    else if (!Helper.IsUnit(dictionary[$"{nameof(backupService.Units)}"]))
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    else
+                    {
+                        backupService.Units = dictionary[$"{nameof(backupService.Units)}"];
+                    }
+                }
 
-                backupService.Overwrite = dictionary.ContainsKey(
-                    $"{nameof(backupService.Overwrite)}")
-                    && bool.TryParse(dictionary[$"{nameof(backupService.Overwrite)}"], out bool b) ? b :
-                    bool.Parse(DefaultOverwrite(backupService.Overwrite.ToString()));
+                if (dictionary.ContainsKey(nameof(backupService.Source)))
+                {
+                    if (string.IsNullOrWhiteSpace(dictionary[nameof(backupService.Source)]))
+                    {
+                        backupService.Overwrite = Helper.ConvertBool(DefaultOverwrite(dictionary[nameof(backupService.Source)]));
+                    }
+                    else if (!Helper.IsBool(dictionary[nameof(backupService.Source)]))
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    else
+                    {
+                        backupService.Overwrite = Helper.ConvertBool(dictionary[nameof(backupService.Source)]);
+                    }
+                }
 
-                backupService.Archive = dictionary.ContainsKey(
-                    $"{nameof(backupService.Archive)}")
-                    && bool.TryParse(dictionary[$"{nameof(backupService.Archive)}"], out bool a) ? a : 
-                    bool.Parse(DefaultArchive(backupService.Archive.ToString()));
+                if (dictionary.ContainsKey($"{nameof(backupService.Archive)}"))
+                {
+                    if (string.IsNullOrWhiteSpace(dictionary[$"{nameof(backupService.Archive)}"]))
+                    {
+                        backupService.Archive = bool.Parse(DefaultArchive(dictionary[$"{nameof(backupService.Archive)}"]));
+                    }
+                    else if (!Helper.IsBool(dictionary[$"{nameof(backupService.Archive)}"]))
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                        return;
+                    }
+                    else
+                    {
+                        backupService.Archive = Helper.ConvertBool(dictionary[$"{nameof(backupService.Archive)}"]);
+                    }
+                }
             }
             else
             {
-                System.Console.WriteLine($"Source folder. This field is required!");
-                input = System.Console.ReadLine();
+                var input = string.Empty;
+                while (true)
+                {
+                    Console.WriteLine($"Source folder. This field is required!");
+                    input = Console.ReadLine();
+                    input = input.Replace("\"", string.Empty);
+                    if (Helper.IsDirectoryExists(input))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The source directory does not exist " +
+                            "or the path contains invalid characters. Please try again.", ConsoleColor.Red);
+                    }
+                }
                 backupService.Source = input;
+                input = string.Empty;
 
-                System.Console.WriteLine($"Target folder. Press ENTER to set default value Dir={AppDomain.CurrentDomain.BaseDirectory}");
-                input = DefaultDirectory(System.Console.ReadLine());
+                while (true)
+                {
+                    Console.WriteLine($"Target folder." +
+                        $" Press ENTER to set default value Dir={AppDomain.CurrentDomain.BaseDirectory}");
+                    input = DefaultDirectory(Console.ReadLine());
+                    input = input.Replace("\"", string.Empty);
+                    if (Helper.IsPathValid(input) && Helper.IsDriveExists(input[0].ToString()))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The path contains invalid characters. Please try again.", ConsoleColor.Red);
+                    }
+                }
                 backupService.Dir = input;
+                input = string.Empty;
 
-                System.Console.Write("Time (numbers only). Press ENTER to set default value Time=30");
-                input = DefaultTime(System.Console.ReadLine());
-                backupService.Time = int.Parse(input);//
+                while (true)
+                {
+                    Console.WriteLine("Time (natural numbers only). Press ENTER to set default value Time=30");
+                    input = DefaultTime(Console.ReadLine());
+                    if (Helper.IsNaturalNumber(input))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The given time value is not a number or not natural. Please try again.", ConsoleColor.Red);
+                    }
+                }
+                backupService.Time = int.Parse(input);
+                input = string.Empty;
 
-                System.Console.Write("Units (s, m, h). Press ENTER to set default value Units=s");
-                input = DefaultUnits(System.Console.ReadLine());
+                while (true)
+                {
+                    Console.WriteLine("Units (s, m, h). Press ENTER to set default value Units=s");
+                    input = DefaultUnits(Console.ReadLine());
+                    if (Helper.IsUnit(input))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                    }
+                }
                 backupService.Units = input;
+                input = string.Empty;
 
-                System.Console.Write("Overwite (true, false). Press ENTER to set default value Overwrite=false");
-                input = DefaultOverwrite(System.Console.ReadLine());
-                backupService.Overwrite = bool.Parse(input);//
+                while (true)
+                {
+                    Console.WriteLine("Overwite (true, false, yes, no). Press ENTER to set default value Overwrite=false");
+                    input = DefaultOverwrite(Console.ReadLine());
+                    if (Helper.IsBool(input))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                    }
+                }
+                backupService.Overwrite = Helper.ConvertBool(input);
+                input = string.Empty;
 
-                System.Console.Write("Archive (true, false). Press ENTER to set default value Archive=true");
-                input = DefaultArchive(System.Console.ReadLine());
-                backupService.Archive = bool.Parse(input);//
+                while (true)
+                {
+                    Console.WriteLine("Archive (true, false, yes, no). Press ENTER to set default value Archive=true");
+                    input = DefaultArchive(Console.ReadLine());
+                    if (Helper.IsBool(input))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        ColorText("The given value is not valid. Please try again.", ConsoleColor.Red);
+                    }
+                }
+                backupService.Archive = Helper.ConvertBool(input);
             }
 
-            System.Console.WriteLine();
+            Console.WriteLine();
 
             backupService.Start();
             ColorText("Write ENTER to stop the application.", ConsoleColor.DarkGray);
-            while (System.Console.ReadLine() == null)
+            while (Console.ReadLine() == null)
             {
             }
         }
 
         private static void ColorText(string message, ConsoleColor color)
         {
-            System.Console.ForegroundColor = color;
-            System.Console.WriteLine(message);
-            System.Console.ResetColor();
+            var previousColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ForegroundColor = previousColor;
         }
 
-        public static string DefaultDirectory(string input)
+        public static string UseOrDefault(string input, Func<string> defaultValueProvider)
         {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                input = AppDomain.CurrentDomain.BaseDirectory;
-            }
-            return input;
+            return string.IsNullOrWhiteSpace(input)
+                ? defaultValueProvider()
+                : input;
         }
 
-        public static string DefaultTime(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                input = FileBackApp.Lib.Properties.Settings.Default.Time.ToString();
-            }
-            return input;
-        }
+        public static string DefaultDirectory(string input) =>
+            UseOrDefault(input, () => AppDomain.CurrentDomain.BaseDirectory);
 
-        public static string DefaultUnits(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                input = FileBackApp.Lib.Properties.Settings.Default.Units;
-            }
-            return input;
-        }
+        public static string DefaultTime(string input) =>
+            UseOrDefault(input, () => Settings.Default.Time.ToString());
 
-        public static string DefaultOverwrite(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                input = FileBackApp.Lib.Properties.Settings.Default.Overwrite.ToString();
-            }
-            return input;
-        }
+        public static string DefaultUnits(string input) =>
+            UseOrDefault(input, () => Settings.Default.Units);
 
-        public static string DefaultArchive(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                input = FileBackApp.Lib.Properties.Settings.Default.Archive.ToString();
-            }
-            return input;
-        }
+        public static string DefaultOverwrite(string input) =>
+            UseOrDefault(input, () => Settings.Default.Overwrite.ToString());
+
+        public static string DefaultArchive(string input) =>
+            UseOrDefault(input, () => Settings.Default.Archive.ToString());
     }
 }

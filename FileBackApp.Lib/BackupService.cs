@@ -78,39 +78,18 @@ namespace FileBackApp.Lib
         {
             timerFull.Stop();
             Enabled = false;
-            Log("Backup service stopped.", ConsoleColor.DarkGray);
+            Log("Backup service stopped.\n", ConsoleColor.DarkGray);
             OnStop?.Invoke(new EventArgs());
         }
 
         public void Start()
         {
-            DirectoryExists();
-            PathValid();
             interval = ConvertTime(Time, Units);
             timerFull.Interval = interval;
             timerFull.Start();
             Enabled = true;
             Log($"Backup service started. Next copy every {Time} {Units.ToLower()}.", ConsoleColor.DarkGray);
             OnStart?.Invoke(new EventArgs());
-        }
-
-        public void PathValid()
-        {
-            if (!Path.IsPathRooted(Dir))
-            {
-                Log("The destination Directory is not valid.", ConsoleColor.Red);
-                return;
-            }
-        }
-
-        public void DirectoryExists()
-        {
-            if (!Directory.Exists(Source))
-            {
-                Log("The Source Directory does not exist or incorrect.", ConsoleColor.Red);
-                return;
-            }
-
         }
 
         private void Log(string message, ConsoleColor color)
@@ -121,6 +100,7 @@ namespace FileBackApp.Lib
         public int ConvertTime(int time, string unit)
         {
             var result = 0;
+            unit = unit.ToLower();
             switch (unit)
             {
                 case "s":
