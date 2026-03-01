@@ -1,5 +1,4 @@
-﻿using FileBackApp.Lib;
-using FileBackAppGUI.Properties;
+﻿using FileBackApp.Properties;
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
@@ -12,40 +11,28 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FileBackAppGUI
+namespace FileBackApp
 {
     public partial class MainForm : Form
     {
-        private string lastItemSelected;
-        private List<string> logs = new List<string>();
-        private BackupService backupService = new BackupService();
+        int tickInterval;
+        int timeInterval;
+        string unit;
+        string lastItemSelected;
 
         public MainForm()
         {
             InitializeComponent();
             cb_Units.SelectedIndex = 1;
-            rtb_Logs.AppendText($"Backapp launched at {DateTime.Now:HH:mm:ss}\nFound a bug? Write here: " +
-                $"https://github.com/CatNuton/Backapp/issues\n");
+            rtb_Logs.AppendText($"Backapp launched at {DateTime.UtcNow}\nFound a bug? Write here: " +
+                $"https://github.com/CatNuton/Backapp/issues");
             LoadItemsFromMemory(cb_Source, Settings.Default.SourcePath);
             LoadItemsFromMemory(cb_Directory, Settings.Default.DirectoryPath);
-            backupService.OnStart += (ea) =>
-            {
-                btn_Start.Text = "Stop loop";
-            };
-            backupService.OnStop += (ea) =>
-            {
-                btn_Start.Text = "Start loop";
-            };
-            backupService.OnLog += (ea) =>
-            {
-                logs.Add(ea.Message);
-                ColorText(ea.Message, Color.FromName(ea.Color.ToString()));
-            };
         }
+
 
         private void btn_SearchFrom_Click(object sender, EventArgs e)
         {
@@ -64,39 +51,35 @@ namespace FileBackAppGUI
 
         private void btn_Start_Click(object sender, EventArgs e)
         {
-            if (!Helper.IsDirectoryExists(cb_Source.Text))
+            if (!FileSystem.DirectoryExists(cb_Source.Text))
             {
                 MessageBox.Show("The source directory does not exist or incorrect.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (!Helper.IsPathValid(cb_Directory.Text) || !Helper.IsDriveExists(cb_Directory.Text[0].ToString()))
+            else if (!Path.IsPathRooted(cb_Directory.Text))
             {
                 MessageBox.Show("The copy path is incorrect.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (!Helper.IsNaturalNumber(nud_Time.Value.ToString()))
+            if (!t_File.Enabled)
             {
-                MessageBox.Show("The given time value is not a number or not natural.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if (!backupService.Enabled)
-            {
-                var unitChar = cb_Units.Text.ToLower().ToCharArray()[0].ToString();
-                backupService.Source = cb_Source.Text.Replace("\"", string.Empty);
-                backupService.Dir = cb_Directory.Text.Replace("\"", string.Empty);
-                backupService.Time = (int)nud_Time.Value;
-                backupService.Units = unitChar;
-                backupService.Overwrite = cb_Overwrite.Checked;
-                backupService.Archive = cb_Archive.Checked;
-                backupService.Start();
+                t_File.Interval = (int)nud_Time.Value * (cb_Units.SelectedIndex == 0 ? 1000 :
+                    cb_Units.SelectedIndex == 1 ? 60000 : 3600000);
+                timeInterval = (int)nud_Time.Value;
+                unit = cb_Units.Text;
+                t_File.Start();
+                t_Progress.Start();
+                UpdateProgressBar();
                 Settings.Default.SourcePath = AddItemsToMemory(cb_Source);
                 Settings.Default.DirectoryPath = AddItemsToMemory(cb_Directory);
                 Settings.Default.Save();
+                btn_Start.Text = "Stop loop";
             }
             else
             {
                 Stop();
+                CheckToStart();
             }
         }
 
@@ -127,8 +110,42 @@ namespace FileBackAppGUI
 
         private void Stop()
         {
-            backupService.Stop();
-            CheckToStart();
+            t_File.Stop();
+            t_Progress.Stop();
+            tickInterval = 0;
+            pb_CopyTime.Value = 0;
+            timeInterval = 0;
+            btn_Start.Text = "Start loop";
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                var path = "";
+                var directoryInfo = new DirectoryInfo(cb_Source.Text);
+                if (!cb_Overwrite.Checked)
+                {
+                    path = $"{cb_Directory.Text}\\{directoryInfo.Name}-" +
+                                $"{DateTime.Now.ToString().Replace(":", ".")}";
+                    FileSystem.CreateDirectory($"{cb_Directory.Text}\\{directoryInfo.Name}-" +
+                        $"{DateTime.Now.ToString().Replace(":", ".")}");
+                }
+                else
+                {
+                    path = $"{cb_Directory.Text}\\{directoryInfo.Name}";
+                    if (!Directory.Exists(path))
+                        FileSystem.CreateDirectory(path);
+                }
+                FileSystem.CopyDirectory(cb_Source.Text, path, true);
+                ColorText($"\nCopied {cb_Source.Text} to {path} at {DateTime.Now.TimeOfDay}", Color.Green);
+                rtb_Logs.AppendText($"\nNext copy in {timeInterval} {unit}");
+            }
+            catch (Exception ex)
+            {
+                Stop();
+                ColorText(ex.Message, Color.Red);
+            }
         }
 
         private void ColorText(string text, Color color)
@@ -148,11 +165,29 @@ namespace FileBackAppGUI
         private void CheckToStart()
         {
             btn_Start.Enabled = (!string.IsNullOrWhiteSpace(cb_Source.Text) && !string.IsNullOrWhiteSpace(cb_Directory.Text)
-                            && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text) || backupService != null);
+                            && nud_Time.Value > 0 && !string.IsNullOrEmpty(cb_Units.Text) || t_File.Enabled);
             if (!cb_Units.Items.Contains(cb_Units.Text))
             {
                 cb_Units.Text = lastItemSelected;
             }
+        }
+
+        private void t_Progress_Tick(object sender, EventArgs e)
+        {
+            UpdateProgressBar();
+        }
+
+        private void UpdateProgressBar()
+        {
+            if (tickInterval == t_File.Interval)
+            {
+                tickInterval = 0;
+                pb_CopyTime.Value = 0;
+            }
+            tickInterval += t_Progress.Interval;
+            int percent = (int)(((double)tickInterval / t_File.Interval) * pb_CopyTime.Maximum);
+            percent = Math.Max(0, Math.Min(100, percent));
+            pb_CopyTime.Value = percent;
         }
 
         private void cb_Units_SelectedIndexChanged(object sender, EventArgs e)
@@ -171,25 +206,6 @@ namespace FileBackAppGUI
                 MessageBox.Show($"Error opening website: {ex}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
-            }
-        }
-
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (logs.Count > 0)
-            {
-                var path = $"{Environment.CurrentDirectory}\\Logs";
-                if (!FileSystem.DirectoryExists(path))
-                {
-                    FileSystem.CreateDirectory(path);
-                }
-                using (var logFile = File.CreateText($"{path}\\log-{DateTime.Now:yyyy.MM.dd.HH.mm.ss}.txt"))
-                {
-                    for (int i = 0; i < logs.Count; i++)
-                    {
-                        logFile.WriteLine(logs[i]);
-                    }
-                }
             }
         }
     }
